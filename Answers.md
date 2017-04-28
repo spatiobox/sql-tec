@@ -1,6 +1,6 @@
 # 参考答案
 
-1.
+1. 
 ```sql
  SELECT SNAME,SSEX,CLASS FROM STUDENT;
 ```
@@ -77,7 +77,7 @@ ON A.SNO=C.SNO AND B.CNO =C.CNO;
 ```sql
 SELECT AVG(A.DEGREE) FROM SCORE A JOIN STUDENT B ON A.SNO = B.SNO WHERE B.CLASS='95033';
 ```
-18.
+18. 
 ```sql
  SELECT A.SNO,A.CNO,B.RANK FROM SCORE A,GRADE B WHERE A.DEGREE BETWEEN B.LOW AND B.UPP 
 
@@ -85,9 +85,7 @@ ORDER BY RANK;
 ```
 19. 
 ```sql
-SELECT A.* FROM SCORE A JOIN SCORE B WHERE A.CNO='3-105' AND A.DEGREE>B.DEGREE AND 
-
-B. SNO='109' AND B.CNO='3-105';
+SELECT A.* FROM SCORE A JOIN SCORE B WHERE A.CNO='3-105' AND A.DEGREE>B.DEGREE AND B. SNO='109' AND B.CNO='3-105';
 --另一解法：
 SELECT A.* FROM SCORE A  WHERE A.CNO='3-105' AND A.DEGREE>ALL(SELECT DEGREE FROM 
 
@@ -95,9 +93,7 @@ SCORE B WHERE B.SNO='109' AND B.CNO='3-105');
 ```
 20. 
 ```sql
-SELECT * FROM score s WHERE DEGREE<(SELECT MAX(DEGREE) FROM SCORE) GROUP BY SNO HAVING 
-
-COUNT(SNO)>1 ORDER BY DEGREE ;
+SELECT * FROM score s WHERE DEGREE<(SELECT MAX(DEGREE) FROM SCORE) GROUP BY SNO HAVING COUNT(SNO) > 1 ORDER BY DEGREE ;
 ```
 21. 见19的第二种解法
 
@@ -113,7 +109,7 @@ select cno,sno,degree from score   where degree >(select degree from score where
 
 and cno='3-105')
 ```
-23.
+23. 
 ```sql
 SELECT A.SNO,A.DEGREE FROM SCORE A JOIN (TEACHER B,COURSE C) ON A.CNO=C.CNO AND B.TNO=C.TNO WHERE B.TNAME='张旭';
 --另一种解法：
@@ -134,11 +130,9 @@ x.cno=y.cno group by x.tno having count(x.tno)>5);
 --实际测试1明显优于2
 ```
 
-25.
+25. 
 ```sql
-select cno,sno,degree from score where cno=(select x.cno from course x,teacher y where 
-
-x.tno=y.tno and y.tname='张旭');
+select cno,sno,degree from score where cno=(select x.cno from course x,teacher y where x.tno=y.tno and y.tname='张旭');
 ```
 26. 
 ```sql
@@ -147,7 +141,7 @@ SELECT CNO FROM SCORE GROUP BY CNO HAVING MAX(DEGREE)>85;
 
 degree>85);
 ```
-27.
+27. 
 ```sql
 SELECT A.* FROM SCORE A JOIN (TEACHER B,COURSE C) ON A.CNO=C.CNO AND B.TNO=C.TNO
 WHERE B.DEPART='计算机系';
@@ -157,40 +151,42 @@ SELECT * from score where cno in (select a.cno from course a join teacher b on
 a.tno=b.tno and b.depart='计算机系');
 --此时2略好于1，在多连接的境况下性能会迅速下降
 ```
-28。
+28. 
 ```sql
 select tname,prof from teacher where depart='计算机系' and prof not in (select prof from 
 
 teacher where depart='电子工程系');
 ```
-29。SELECT * FROM SCORE WHERE DEGREE>ANY(SELECT DEGREE FROM SCORE WHERE CNO='3-245') ORDER 
+29. 
+```sql
+SELECT * FROM SCORE WHERE DEGREE>ANY(SELECT DEGREE FROM SCORE WHERE CNO='3-245') ORDER 
 
 BY DEGREE DESC;
-
-30。
+```
+30. 
 ```sql
 SELECT * FROM SCORE WHERE DEGREE>ALL(SELECT DEGREE FROM SCORE WHERE CNO='3-245') ORDER 
 
 BY DEGREE DESC;
 ```
-31.
+31. 
 ```sql
 SELECT SNAME AS NAME, SSEX AS SEX, SBIRTHDAY AS BIRTHDAY FROM STUDENT
 UNION
 SELECT TNAME AS NAME, TSEX AS SEX, TBIRTHDAY AS BIRTHDAY FROM TEACHER;
 ```
-32.
+32. 
 ```sql
 SELECT SNAME AS NAME, SSEX AS SEX, SBIRTHDAY AS BIRTHDAY FROM STUDENT WHERE SSEX='女'
 UNION
 SELECT TNAME AS NAME, TSEX AS SEX, TBIRTHDAY AS BIRTHDAY FROM TEACHER WHERE TSEX='女';
 ```
-33.
+33. 
 ```sql
 SELECT A.* FROM SCORE A WHERE DEGREE<(SELECT AVG(DEGREE) FROM SCORE B WHERE A.CNO=B.CNO);
 --须注意********此题
 ```
-34。
+34. 
 ```sql
 --解法一：
 SELECT A.TNAME,A.DEPART FROM TEACHER A JOIN COURSE B ON A.TNO=B.TNO;
@@ -202,7 +198,7 @@ SELECT TNAME,DEPART FROM TEACHER WHERE TNO IN (SELECT TNO FROM COURSE);
 
 --实际分析，第一种揭发貌似更好，至少扫描次数最少。
 ```
-35.
+35. 
 ```sql
 --解法一：
 SELECT TNAME,DEPART FROM TEACHER A LEFT JOIN COURSE B USING(TNO) WHERE ISNUL(B.tno);
@@ -215,19 +211,19 @@ SELECT TNAME,DEPART FROM TEACHER WHERE TNO NOT IN (SELECT TNO FROM COURSE);
 NOT IN的方法效率最差，其余两种差不多
 ```
 
-36.
+36. 
 ```sql
 SELECT CLASS FROM STUDENT A WHERE SSEX='男' GROUP BY CLASS HAVING COUNT(SSEX)>1;
 ```
-37.
+37. 
 ```sql
 SELECT * FROM STUDENT A WHERE SNAME not like '王%';
 ```
-38.
+38. 
 ```sql
 SELECT SNAME,(YEAR(NOW())-YEAR(SBIRTHDAY)) AS AGE FROM STUDENT;
 ```
-39.
+39. 
 ```sql
 select sname,sbirthday as THEMAX from student where sbirthday =(select min(SBIRTHDAY) 
 
@@ -237,37 +233,34 @@ select sname,sbirthday as THEMIN from student where sbirthday =(select max(SBIRT
 
 student);
 ```
-40.
+40. 
 ```sql
 SELECT CLASS,(YEAR(NOW())-YEAR(SBIRTHDAY)) AS AGE FROM STUDENT ORDER BY CLASS DESC,AGE 
 
 DESC;
 ```
-41.
+41. 
 ```sql
 SELECT A.TNAME,B.CNAME FROM TEACHER A JOIN COURSE B USING(TNO) WHERE A.TSEX='男';
 ```
-42.
+42. 
 ```sql
 SELECT A.* FROM SCORE A WHERE DEGREE=(SELECT MAX(DEGREE) FROM SCORE B );
 ```
-43.
+43. 
 ```sql
 SELECT SNAME FROM STUDENT A WHERE SSEX=(SELECT SSEX FROM STUDENT B WHERE B.SNAME='李军');
 ```
-44.
+44. 
 ```sql
 SELECT SNAME FROM STUDENT A WHERE SSEX=(SELECT SSEX FROM STUDENT B WHERE B.SNAME='李军' )
 AND CLASS=(SELECT CLASS FROM STUDENT C WHERE c.SNAME='李军');
 ```
-45.
+45. 
 ```sql
 --解法一：
-SELECT A.* FROM SCORE A JOIN (STUDENT B,COURSE C) USING(sno,CNO) WHERE B.SSEX='男
-
-' AND C.CNAME='计算机导论';
+SELECT A.* FROM SCORE A JOIN (STUDENT B,COURSE C) USING(sno,CNO) WHERE B.SSEX='男' AND C.CNAME='计算机导论';
 --解法二：
-select * from score where sno in(select sno from student where
-ssex='男') and cno=(select cno from course
+select * from score where sno in(select sno from student where ssex='男') and cno=(select cno from course
 where cname='计算机导论');
 ```
